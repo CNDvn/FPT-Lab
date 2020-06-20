@@ -1,0 +1,10 @@
+Student Code		Student Name		Date of birth		learning point				
+SE140899		Bui Hong An		11/09/2000		7.0
+SE140855		Cao The Hiep		26/08/2000		8.5
+se140875		Cao Van Hien		11/5/2000		7.0
+SE147852		Cao Toa Chung		11/09/2000		9.0
+SE140658		Dao Tra Mi		16/07/2000		8.0
+SE140588		Nguyen The Hien		25/08/2000		5.6
+SE140896		Nguyen Phi Hung		25/08/1999		8.0
+SE140577		Nguyen Thanh Phong		11/05/2000		7.0
+SE140755		Pham Van Toan		11/07/1999		8.0

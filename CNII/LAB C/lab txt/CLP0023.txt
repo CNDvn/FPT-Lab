@@ -1,0 +1,100 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/* 
+ * File:   main.c
+ * Author: Duc Hieu
+ *
+ * Created on June 13, 2020, 3:13 AM
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+
+/*
+ * 
+ */
+
+char *strcat(char *dest, const char *src) {
+
+    int i = -1;
+    int j = 0;
+    do {
+        i++;
+        if (dest[i] == '\0') {
+            do {
+                dest[i] = src[j];
+                j++;
+                i++;
+            } while (src[j] != '\0');
+            break;
+        }
+    } while (dest[j] != '\0');
+}
+
+int strcmp(const char *str1, const char *str2) {
+    int i = 0;
+    while (str1[i] == str2[i]) {
+        i++;
+    }
+    return str1[i] - str2[i];
+}
+
+char *strcpy(char *dest, const char *src) {
+    int i = 0;
+    do {
+        dest[i] = src[i];
+        i++;
+        dest[i] = '\0';
+    } while (src[i] != '\0');
+}
+
+char *strncpy(char *dest, const char *src, size_t n) {
+    for (int i = 0; i < n; i++) {
+        dest[i] = src[i];
+    }
+}
+
+char *strstr(char* string, char* match) {
+    int i = 0;
+    int flag = 0;
+    do {
+        int j = 0;
+        do {
+            if (match[j] == string[i]) {
+                flag++;
+                j++;
+                i++;
+            } else {
+                flag = 0;
+                break;
+            }
+        } while (match[j] != '\0');
+        if (flag > 0) {
+            return string + i - flag;
+        }
+        i++;
+    } while (string[i] != '\0');
+    return "(null)";
+}
+
+char *strchr(const char *str, int c) {
+    int i = 0;
+    do {
+        if (c == str[i])
+            return str + i;
+        i++;
+    } while (str[i] != '\0');
+    return "(null)";
+}
+
+int main(int argc, char** argv) {
+    char s[100] = "chao moi nguoi";
+    strcpy(&s[0],&s[5]);
+    printf("%s",s);
+    return (EXIT_SUCCESS);
+}
+

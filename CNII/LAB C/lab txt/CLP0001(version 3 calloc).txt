@@ -1,0 +1,258 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/* 
+ * File:   main.c
+ * Author: Duc Hieu
+ *
+ * Created on June 3, 2020, 12:47 PM
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define MAX 30
+#define MAX_LINE 349900
+
+/*
+ * 
+ */
+
+//cac ham goi y 
+//xem no co phai substring khong. Tra ve 1 neu phai va 0 neu khong phai
+
+int substring(char shortstr[], char longstr[]) {
+    char* ptr = strstr(longstr, shortstr);
+    if (ptr == NULL) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+//xem no co phai subsequence khong, tra ve 1 neu phai va 0 neu khong phai
+
+int subsequence(char shortstr[], char longstr[]) {
+    char strs[MAX], strl[MAX];
+    strcpy(strs, shortstr);
+    strcpy(strl, longstr);
+    int s = strlen(strs);
+    int l = strlen(strl);
+    if (l < s) {
+        char a[MAX];
+        strcpy(a, strs);
+        strcpy(strs, strl);
+        strcpy(strl, a);
+    }
+
+    int j = -1;
+    int temp = 0;
+    int i;
+    s = strlen(strs);
+    l = strlen(strl);
+    for (i = 0; i < s; i++) {
+        while (j < l) {
+            j++;
+            if (strs[i] == strl[j]) {
+                temp++;
+                break;
+            }
+        }
+    }
+
+    if (strlen(strs) == temp) {
+        return 1;
+    } else {
+        return 0;
+    }
+
+}
+//ham xoa 1 phan tu trong mang
+
+void delete(char* str, int pos, int* n) {
+    for (int i = pos; i < *n - 1; i++) {
+        str[i] = str[i + 1];
+    }
+    (*n)--;
+}
+//xem no co phai permutation cua nhau khong. Tra ve 1 neu phai va 0 neu  khong phai
+
+int permutation(char string1[], char string2[]) {
+    char str2[MAX];
+    strcpy(str2, string2);
+    int n = strlen(str2);
+    for (int i = 0; i < strlen(string1); i++) {
+        int flag = 0;
+        for (int j = 0; j < n; j++) {
+            if (string1[i] == str2[j]) {
+                delete(str2, j, &n);
+                flag = 1;
+            }
+        }
+        if (flag == 0)
+            return 0;
+    }
+    return 1;
+}
+//xem no co matchscore khong, neu co tra ve 1 va 0 neu khong co
+
+int matchscore(char string1[], char string2[]) {
+    int temp = 0;
+    for (int i = 0; i < strlen(string1); i++) {
+        if (string1[i] != string2[i])
+            temp++; // temp dang am chi so lan ma o vi tri do no khong nhu nhau
+    }
+    if (temp >= 3)
+        return 0;
+    return 1;
+}
+//ham kiem tra xem file co ton tai hay khong
+
+int checkExist(char* file) {
+    FILE* f = fopen(file, "r");
+    if (f == NULL) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+//ham kiem tra xem tu can tra co ton tai hay khong
+
+/*
+ * bang cach tao 1 mang 1 chieu kieu char dung mang nay de doc 1 chuoi o 1 dong trong file
+ * sau do mo file de doc 
+ * roi dung do while de doc het file
+ * vua doc vua kiem tra neu co thi return 1 con khong thi thoi 
+ * cu lap nhu vay cho den het ma khong co thi return ve 1
+ */
+int findWord(char** dic, char* word) {
+    for (int i = 0; i < MAX_LINE; i++) {
+        if (strcmp(word, dic[i]) == 0) {
+            return 1;
+        }
+    }
+    return 0;
+}
+//ham kiem tra xem co tu de recommend cho nguoi dung khong
+
+int checkRecommend(char** dic, char* word) {
+    int lWord = strlen(word);
+
+    for (int i = 0; i < MAX_LINE; i++) {
+        int lDic = strlen(dic[i]);
+        int deviant = lDic - lWord;
+        if (deviant < 0) deviant = lWord - lDic;
+        
+        if (deviant == 1) {
+            if (subsequence(word, dic[i]) || substring(word, dic[i])) {
+                return 1;
+            }
+        } else if (lWord == lDic) {
+            if (permutation(word, dic[i]) || matchscore(word, dic[i])) {
+                return 1;
+            }
+        }
+    }
+    return 0;
+
+}
+//Ham goi y nguoi dung 1 so tu co the la chinh tu ho can tim
+
+/*
+ * dua vao thuat toan nhu ham findWord() de doc chuoi 1 dong trong file 
+ * roi mang di thuc hien cac thuat toan goi y 
+ */
+void recommend(char** dic, char* word) {
+    int lWord = strlen(word);
+    int sll = 0;
+    for (int i = 0; i < MAX_LINE; i++) {
+        int lDic = strlen(dic[i]);
+        
+        int deviant = lDic - lWord;
+        if (deviant < 0) deviant = lWord - lDic;
+        
+        if (deviant == 1) {
+            if (subsequence(word, dic[i]) || substring(word, dic[i])) {
+                printf("%s\n", dic[i]);
+                sll++;
+            }
+        } else if (lWord == lDic) {
+            if (permutation(word, dic[i]) || matchscore(word, dic[i])) {
+                printf("%s\n", dic[i]);
+                sll++;
+            }
+        }
+    }
+    printf("%d\n", sll);
+}
+
+int exist() {
+    FILE *f = fopen("dictionary.txt", "r");
+    fclose(f);
+    if (f == NULL) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+int checkWord(char* word) {
+    for (int i = 0; i < strlen(word); i++)
+        if (word[i] < 'a' || word[i] > 'z')
+            return 1;
+    return 0;
+}
+
+void input(char* word) {
+    do {
+        printf("Please, enter the word you would like checked: ");
+        scanf("%s", word);
+    } while (checkWord(word));
+}
+
+int main(int argc, char** argv) {
+    char** dic;
+    char word[MAX];
+    char choice[3];
+    printf("Welcome to the Spell Checker!\n");
+
+    if (exist() == 1) {
+        FILE *f = fopen("dictionary.txt", "r");
+        dic = (char**) calloc(MAX_LINE, sizeof (char*));
+        for (int i = 0; i < MAX_LINE; i++) {
+            dic[i] = (char*) calloc(MAX, sizeof (char));
+            fscanf(f, "%s", dic[i]);
+        }
+        fclose(f);
+        printf("The dictionary exist\n");
+
+        char* choice = "yes";
+    } else {
+        printf("The dictionary not exist\n");
+        printf("Please, check your file dictionary\n");
+        char* choice = "no";
+    }
+
+
+    while (strcmp(choice, "no") != 0) {
+        input(word);
+        if (findWord(dic, word) == 1) {
+            printf("Great, %s is in the dictionary!\n", word);
+        } else if (checkRecommend(dic, word) == 1) {
+            printf("Here are the possible words you could have meant: \n");
+            recommend(dic, word);
+        } else {
+            printf("This word not exist\n");
+        }
+        do {
+            printf("Would you like enter another word? (yes/no)\n");
+            fpurge(stdin);
+            scanf("%s", &choice);
+        } while (strcmp(choice, "no") != 0 && strcmp(choice, "yes") != 0);
+    }
+
+    return (EXIT_SUCCESS);
+}
+

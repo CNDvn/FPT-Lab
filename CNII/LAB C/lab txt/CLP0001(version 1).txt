@@ -1,0 +1,193 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/* 
+ * File:   main.c
+ * Author: Duc Hieu
+ *
+ * Created on June 5, 2020, 1:28 PM
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define MAX 30000
+
+/*
+ * 
+ */
+//ham check file co ton tai khong
+
+int exist() {
+    FILE *f = fopen("dictionary.txt", "r");
+    fclose(f);
+    if (f == NULL) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+int checkWord(char* word) {
+    for (int i = 0; i < strlen(word); i++)
+        if (word[i] < 'a' || word[i] > 'z')
+            return 1;
+    return 0;
+}
+
+void input(char* word) {
+    do {
+        printf("Please, enter the word you would like checked: ");
+        scanf("%s", word);
+    } while (checkWord(word));
+}
+
+int findWord(char tudien[MAX][30], char word[]) {
+    int temp = 0;
+    FILE *f = fopen("dictionary.txt", "r");
+    do {
+        for (int i = 0; i < MAX; i++) {
+            fscanf(f, "%s", tudien[i]);
+            temp++;
+        }
+
+        for (int i = 0; i < MAX; i++) {
+            if (strcmp(word, tudien[i]) == 0)
+                return 1;
+        }
+
+    } while (temp < 349900);
+    fclose(f);
+    return 0;
+}
+
+
+//cac ham goi y 
+//xem no co phai substring khong. Tra ve 1 neu phai va 0 neu khong phai
+
+int substring(char shortstr[], char longstr[]) {
+    char* ptr = strstr(longstr, shortstr);
+    if (ptr == NULL) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+//xem no co phai subsequence khong, tra ve 1 neu phai va 0 neu khong phai
+
+int subsequence(char shortstr[], char longstr[]) {
+    int j = -1;
+    int temp = 0;
+    int i;
+    int lenLongstr = strlen(longstr);
+    for (i = 0; i < strlen(shortstr); i++) {
+        while (j < lenLongstr) {
+            j++;
+            if (shortstr[i] == longstr[j]) {
+                temp++;
+                break;
+            }
+        }
+    }
+
+    if (strlen(shortstr) == temp) {
+        return 1;
+    } else {
+        return 0;
+    }
+
+}
+//xem no co phai permutation cua nhau khong. Tra ve 1 neu phai va 0 neu  khong phai
+
+int permutation(char string1[], char string2[]) {
+    for (int i = 0; i < strlen(string1); i++) {
+        int flag = 0;
+        for (int j = 0; j < strlen(string1); j++) {
+            if (string1[i] == string2[j]) {
+                flag = 1;
+            }
+        }
+        if (flag == 0)
+            return 0;
+    }
+    return 1;
+}
+//xem no co matchscore khong, neu co tra ve 1 va 0 neu khong co
+
+int matchscore(char string1[], char string2[]) {
+    int temp = 0;
+    for (int i = 0; i < strlen(string1); i++) {
+        if (string1[i] != string2[i])
+            temp++; // temp dang am chi so lan ma o vi tri do no khong nhu nhau
+    }
+    if (temp >= 3)
+        return 0;
+    return 1;
+}
+void recommend(char* word) {
+    int temp = 0;
+    char tudien[MAX][30];
+    FILE *f = fopen("dictionary.txt", "r");
+    int lWord = strlen(word);
+
+    do {
+        for (int i = 0; i < MAX; i++) {
+            fscanf(f, "%s", tudien[i]);
+            temp++;
+        }
+
+        for (int i = 0; i < MAX; i++) {
+            int lTuDien = strlen(tudien[i]);
+
+            int deviant = strlen(tudien[i]) - strlen(word);
+
+            if (lWord < lTuDien && deviant == 1) {
+                if (subsequence(word, tudien[i]) || substring(word, tudien[i])) {
+                    printf("%s\n", tudien[i]);
+               
+                }
+            } else if (lWord == lTuDien) {
+                if (permutation(word, tudien[i]) || matchscore(word, tudien[i])) {
+                    printf("%s\n", tudien[i]);
+                }
+            }
+        }
+
+    } while (temp < 349900);
+    fclose(f);
+}
+int main(int argc, char** argv) {
+    char tudien[MAX][30];
+    char word[30];
+    char choice[3];
+    printf("Welcome to the Spell Checker!\n");
+    if (exist() == 1) {
+        printf("The dictionary exist\n");
+        char* choice = "yes";
+    } else {
+        printf("The dictionary not exist\n");
+        printf("Please, check your file dictionary\n");
+        char* choice = "no";
+    }
+
+    while (strcmp(choice, "no") != 0) {
+        input(word);
+        if (findWord(tudien, word) == 1) {
+            printf("Great, %s is in the dictionary!\n", word);
+        } else {
+            printf("Here are the possible words you could have meant: \n");
+            recommend(word);
+        }
+        do {
+            printf("Would you like enter another word? (yes/no)\n");
+            fpurge(stdin);
+            scanf("%s", &choice);
+        } while (strcmp(choice, "no") != 0 && strcmp(choice, "yes") != 0);
+    }
+
+    return (EXIT_SUCCESS);
+}
+
