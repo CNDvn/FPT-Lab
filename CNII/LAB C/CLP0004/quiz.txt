@@ -1,0 +1,34 @@
+7
+TF 5
+There exist birds that can not fly. (true/false)
+true
+MC 10
+Who was the president of the USA in 1991?
+6
+Richard Nixon
+Gerald Ford
+Jimmy Carter
+Ronald Reagan
+George Bush Sr.
+Bill Clinton
+E
+SA 20
+What city hosted the 2004 Summer Olympics?
+Athens
+TF 10
+My name is Duc Hieu (true/false)
+true
+TF 10
+I am 17 years old (true/false)
+false
+SA 25
+What is my name?
+duc hieu
+MC 30
+What is my name?
+4
+duc hieu
+anh dung
+duc hai
+duc thien
+A
